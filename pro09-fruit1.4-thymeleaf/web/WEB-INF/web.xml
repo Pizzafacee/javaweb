@@ -11,6 +11,22 @@
         <servlet-name>indexFruit</servlet-name>
         <url-pattern>/index</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>addFruit</servlet-name>
+        <servlet-class>com.atguigu.servlet.addServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>addFruit</servlet-name>
+        <url-pattern>/add</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>updateFruit</servlet-name>
+        <servlet-class>com.atguigu.servlet.updateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>updateFruit</servlet-name>
+        <url-pattern>/update</url-pattern>
+    </servlet-mapping>
     <context-param>
         <param-name>view-prefix</param-name>
         <param-value>/</param-value>

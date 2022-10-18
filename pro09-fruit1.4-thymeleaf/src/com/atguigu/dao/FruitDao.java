@@ -13,4 +13,8 @@ public interface FruitDao {
     void removeFruitById(Integer id);
     //添加一个Fruit
     void addFruit(Fruit fruit);
+    //更新fruit
+    public void updateFruit(Fruit fruit);
+    //删除根据id
+    void deleteFruitById(long parseLong);
 }
