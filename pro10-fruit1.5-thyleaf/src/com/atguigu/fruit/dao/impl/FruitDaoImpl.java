@@ -2,13 +2,16 @@ package com.atguigu.fruit.dao.impl;
 
 import com.atguigu.fruit.dao.FruitDao;
 import com.atguigu.fruit.pojo.Fruit;
+import com.atguigu.myssm.baseDao.BaseDao;
 
 import java.util.List;
 
-public class FruitDaoImpl implements FruitDao {
+public class FruitDaoImpl extends BaseDao<Fruit> implements FruitDao {
     @Override
     public List<Fruit> getFruitList() {
-        return null;
+        String sql = "select * from t_fruit";
+        List<Fruit> fruitList = super.executeQuery(sql);
+        return fruitList;
     }
 
     @Override
