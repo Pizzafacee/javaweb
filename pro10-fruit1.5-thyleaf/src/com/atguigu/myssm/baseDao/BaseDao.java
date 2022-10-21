@@ -1,8 +1,11 @@
 package com.atguigu.myssm.baseDao;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -75,6 +78,7 @@ public abstract class BaseDao<T> {
 
     //查询list
     protected List<T> executeQuery(String sql, Object... params) {
+        List<T> list = new ArrayList<>();
         try {
             //获取连接
             conn = this.getConn();
@@ -92,8 +96,9 @@ public abstract class BaseDao<T> {
                 for (int i = 0; i < columnCount; i++) {
                     String columnName = metaData.getColumnName(i + 1);
                     Object columnValue = rs.getObject(i + 1);
-                    setValue(object,columnValue,columnValue);
+                    setValue(object,columnName,columnValue);
                 }
+                list.add(object);
             }
 
         } catch (SQLException e) {
@@ -103,10 +108,22 @@ public abstract class BaseDao<T> {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return null;
+        return list;
     }
 
-    protected  void setValue(T object, Object columnValue, Object columnValue1){
+    protected  void setValue(T object, String colName, Object columnValue1){
         Class<?> aClass = object.getClass();
+        //Field[] declaredFields = aClass.getDeclaredFields();
+        try {
+            Field declaredField = aClass.getDeclaredField(colName);
+            if(declaredField!=null){
+                declaredField.setAccessible(true);
+                declaredField.set(object,columnValue1);
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 }
