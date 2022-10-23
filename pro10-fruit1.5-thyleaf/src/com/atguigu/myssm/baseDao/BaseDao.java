@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 public abstract class BaseDao<T> {
@@ -92,11 +93,11 @@ public abstract class BaseDao<T> {
             int columnCount = metaData.getColumnCount();
             while (rs.next()) {
                 //创建泛型对象
-                T object = (T)entityClass.newInstance();
+                T object = (T) entityClass.newInstance();
                 for (int i = 0; i < columnCount; i++) {
                     String columnName = metaData.getColumnName(i + 1);
                     Object columnValue = rs.getObject(i + 1);
-                    setValue(object,columnName,columnValue);
+                    setValue(object, columnName, columnValue);
                 }
                 list.add(object);
             }
@@ -111,19 +112,86 @@ public abstract class BaseDao<T> {
         return list;
     }
 
-    protected  void setValue(T object, String colName, Object columnValue1){
+    protected void setValue(T object, String colName, Object columnValue1) {
         Class<?> aClass = object.getClass();
         //Field[] declaredFields = aClass.getDeclaredFields();
         try {
             Field declaredField = aClass.getDeclaredField(colName);
-            if(declaredField!=null){
+            if (declaredField != null) {
                 declaredField.setAccessible(true);
-                declaredField.set(object,columnValue1);
+                declaredField.set(object, columnValue1);
             }
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+
+    //执行更新，返回影响行数
+    protected int executeUpdate(String sql, Object... params) {
+        boolean insertFlag = false;
+        insertFlag = sql.trim().toUpperCase().startsWith("INSERT");
+        try {
+            conn = getConn();
+            if (insertFlag) {
+                psmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            } else {
+                psmt = conn.prepareStatement(sql);
+            }
+            setParams(psmt, params);
+            int count = psmt.executeUpdate();
+
+            if (insertFlag) {
+                rs = psmt.getGeneratedKeys();
+                if (rs.next()) {
+                    return ((Long) rs.getLong(1)).intValue();
+                }
+            }
+            return count;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(rs, psmt, conn);
+        }
+        return 0;
+    }
+
+    //执行查询，返回单个实体对象
+    protected T load(String sql, Object... params) {
+        try {
+            conn = getConn();
+            psmt = conn.prepareStatement(sql);
+            setParams(psmt, params);
+            rs = psmt.executeQuery();
+
+            //通过rs可以获取结果集的元数据
+            //元数据：描述结果集数据的数据 , 简单讲，就是这个结果集有哪些列，什么类型等等
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+            //获取结果集的列数
+            int columnCount = rsmd.getColumnCount();
+            //6.解析rs
+            if (rs.next()) {
+                T entity = (T) entityClass.newInstance();
+
+                for (int i = 0; i < columnCount; i++) {
+                    String columnName = rsmd.getColumnName(i + 1);            //fid   fname   price
+                    Object columnValue = rs.getObject(i + 1);     //33    苹果      5
+                    setValue(entity, columnName, columnValue);
+                }
+                return entity;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } finally {
+            close(rs, psmt, conn);
+        }
+        return null;
     }
 }

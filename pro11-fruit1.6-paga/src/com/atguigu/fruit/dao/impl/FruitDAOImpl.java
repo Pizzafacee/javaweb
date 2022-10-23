@@ -1,17 +1,15 @@
 package com.atguigu.fruit.dao.impl;
 
-import com.atguigu.fruit.dao.FruitDao;
+import com.atguigu.fruit.dao.FruitDAO;
 import com.atguigu.fruit.pojo.Fruit;
-import com.atguigu.myssm.baseDao.BaseDao;
+import com.atguigu.myssm.basedao.BaseDAO;
 
 import java.util.List;
 
-public class FruitDaoImpl extends BaseDao<Fruit> implements FruitDao {
+public class FruitDAOImpl extends BaseDAO<Fruit> implements FruitDAO {
     @Override
-    public List<Fruit> getFruitList() {
-        String sql = "select * from t_fruit";
-        List<Fruit> fruitList = super.executeQuery(sql);
-        return fruitList;
+    public List<Fruit> getFruitList(Integer pageNo) {
+        return super.executeQuery("select * from t_fruit limit ? , 5" , (pageNo-1)*5);
     }
 
     @Override
@@ -27,7 +25,7 @@ public class FruitDaoImpl extends BaseDao<Fruit> implements FruitDao {
 
     @Override
     public void delFruit(Integer fid) {
-        super.executeUpdate("delete from t_fruit where fid = ? " , fid);
+        super.executeUpdate("delete from t_fruit where fid = ? " , fid) ;
     }
 
     @Override
@@ -35,4 +33,11 @@ public class FruitDaoImpl extends BaseDao<Fruit> implements FruitDao {
         String sql = "insert into t_fruit values(0,?,?,?,?)";
         super.executeUpdate(sql,fruit.getFname(),fruit.getPrice(),fruit.getFcount(),fruit.getRemark());
     }
+
+    @Override
+    public int getFruitCount() {
+        return ((Long)super.executeComplexQuery("select count(*) from t_fruit")[0]).intValue();
+    }
 }
+
+// 39行报错  ClassCastException: java.lang.Long cannot be cast to java.lang.Integer
