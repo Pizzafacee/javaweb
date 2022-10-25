@@ -1,6 +1,7 @@
 package com.atguigu.entity;
 
 public class Fruit {
+    private int fid;
     private String fname;
     private int price;
     private int fcount;
@@ -9,7 +10,16 @@ public class Fruit {
     public Fruit() {
     }
 
-    public Fruit(String fname, int price, int fcount, String remark) {
+    public int getFid() {
+        return fid;
+    }
+
+    public void setFid(int fid) {
+        this.fid = fid;
+    }
+
+    public Fruit(int fid, String fname, int price, int fcount, String remark) {
+        this.fid = fid;
         this.fname = fname;
         this.price = price;
         this.fcount = fcount;

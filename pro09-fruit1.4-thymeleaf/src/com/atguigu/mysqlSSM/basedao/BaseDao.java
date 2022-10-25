@@ -6,6 +6,7 @@ import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public abstract class BaseDao<T> {
     //数据库的连接信息和对象
@@ -37,7 +38,7 @@ public abstract class BaseDao<T> {
         }
     }
 
-    protected Connection getConn(){
+    protected Connection getConn() {
         try {
             //1.加载驱动
             Class.forName(driver);
@@ -46,18 +47,18 @@ public abstract class BaseDao<T> {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
-        return null ;
+        return null;
     }
 
-    protected void close(ResultSet rs , PreparedStatement psmt , Connection conn){
+    protected void close(ResultSet rs, PreparedStatement psmt, Connection conn) {
         try {
             if (rs != null) {
                 rs.close();
             }
-            if(psmt!=null){
+            if (psmt != null) {
                 psmt.close();
             }
-            if(conn!=null && !conn.isClosed()){
+            if (conn != null && !conn.isClosed()) {
                 conn.close();
             }
         } catch (SQLException e) {
@@ -66,10 +67,10 @@ public abstract class BaseDao<T> {
     }
 
     //给预处理命令对象设置参数
-    private void setParams(PreparedStatement psmt , Object... params) throws SQLException {
-        if(params!=null && params.length>0){
+    private void setParams(PreparedStatement psmt, Object... params) throws SQLException {
+        if (params != null && params.length > 0) {
             for (int i = 0; i < params.length; i++) {
-                psmt.setObject(i+1,params[i]);
+                psmt.setObject(i + 1, params[i]);
             }
         }
     }
@@ -78,9 +79,9 @@ public abstract class BaseDao<T> {
     protected List<T> executeQueryAll(String sql, Object... params) {
         List<T> list = new ArrayList<>();
         try {
-            connection = getConn() ;
+            connection = getConn();
             preparedStatement = connection.prepareStatement(sql);
-            setParams(preparedStatement,params);
+            setParams(preparedStatement, params);
             resultSet = preparedStatement.executeQuery();
 
             //通过rs可以获取结果集的元数据
@@ -90,13 +91,13 @@ public abstract class BaseDao<T> {
             //获取结果集的列数
             int columnCount = rsmd.getColumnCount();
             //6.解析rs
-            while(resultSet.next()){
-                T entity = (T)TEntity.newInstance();
+            while (resultSet.next()) {
+                T entity = (T) TEntity.newInstance();
 
-                for(int i = 0 ; i<columnCount;i++){
-                    String columnName = rsmd.getColumnName(i+1);            //fid   fname   price
-                    Object columnValue = resultSet.getObject(i+1);     //33    苹果      5
-                    setValue(entity,columnName,columnValue);
+                for (int i = 0; i < columnCount; i++) {
+                    String columnName = rsmd.getColumnName(i + 1);            //fid   fname   price
+                    Object columnValue = resultSet.getObject(i + 1);     //33    苹果      5
+                    setValue(entity, columnName, columnValue);
                 }
                 list.add(entity);
             }
@@ -107,23 +108,64 @@ public abstract class BaseDao<T> {
         } catch (InstantiationException e) {
             e.printStackTrace();
         } finally {
-            close(resultSet,preparedStatement,connection);
+            close(resultSet, preparedStatement, connection);
         }
-        return list ;
+        return list;
     }
+
+    //新增或者修
+    protected int addOrUpdate(String sql, Object... params) {
+        //判断是新增还是修改
+        boolean insert = sql.trim().toUpperCase().startsWith("INSERT");
+        connection = getConn();
+        try {
+            if (insert) {
+                preparedStatement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+            } else {
+                 preparedStatement = connection.prepareStatement(sql);
+            }
+            setParams(preparedStatement, params);
+            int i = preparedStatement.executeUpdate();
+            if(insert){
+                 resultSet = preparedStatement.getGeneratedKeys();
+                if(resultSet.next()){
+                    int intValue = ((Long) resultSet.getLong(1)).intValue();
+                    return intValue;
+                }
+            }
+            return i;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
     //通过反射技术给obj对象的property属性赋propertyValue值
-    private void setValue(Object obj ,  String property , Object propertyValue){
+    private void setValue(Object obj, String property, Object propertyValue) {
         Class clazz = obj.getClass();
         try {
             //获取property这个字符串对应的属性名 ， 比如 "fid"  去找 obj对象中的 fid 属性
             Field field = clazz.getDeclaredField(property);
-            if(field!=null){
+            if (field != null) {
                 field.setAccessible(true);
-                field.set(obj,propertyValue);
+                field.set(obj, propertyValue);
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
+
+    protected  void delete(String sql, long parseLong){
+        try {
+            connection = getConn();
+            preparedStatement = connection.prepareStatement(sql);
+           setParams(preparedStatement,parseLong);
+           preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    };
 
 }

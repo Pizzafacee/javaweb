@@ -22,9 +22,20 @@ public class FruitDaoImpl extends BaseDao<Fruit> implements FruitDao {
     public void removeFruitById(Integer id) {
 
     }
+    @Override
+    public void updateFruit(Fruit fruit) {
+        String sql = "update t_fruit set fname=?, price=?,fcount=?,remark=? where fid= ?";
+        super.addOrUpdate(sql,fruit.getFname(),fruit.getPrice(),fruit.getFcount(),fruit.getRemark(),fruit.getFid());
+    }
+
+    @Override
+    public void deleteFruitById(long parseLong) {
+        String sql = "delete from t_fruit where fid= ?";
+        super.delete(sql,parseLong);
+    }
 
     @Override
     public void addFruit(Fruit fruit) {
-
+        super.addOrUpdate("insert into t_fruit values(0,?,?,?,?)",fruit.getFname(),fruit.getPrice(),fruit.getFcount());
     }
 }
