@@ -13,6 +13,7 @@ import java.io.IOException;
 public class addServlet extends ViewBaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         req.setCharacterEncoding("utf-8");
         String fname = req.getParameter("fname");
         String prince = req.getParameter("prince");
