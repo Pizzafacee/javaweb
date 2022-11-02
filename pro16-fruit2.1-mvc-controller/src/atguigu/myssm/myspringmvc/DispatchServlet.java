@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,24 +99,46 @@ public class DispatchServlet extends ViewBaseServlet {
         if (o != null) {
             Class<?> aClass = o.getClass();
             try {
-                Method declaredMethod = aClass.getDeclaredMethod(operate, HttpServletRequest.class, HttpServletResponse.class);
-                if (declaredMethod != null) {
-                    declaredMethod.setAccessible(true);
-                    Object invoke = declaredMethod.invoke(o, req, resp);
-                    if (invoke instanceof String) {
-                        String returnValue = (String) invoke;
-                        boolean redirect = returnValue.startsWith("redirect");
-                        if(redirect){
-                            String substring1 = returnValue.substring("redirect:".length());
-                            resp.sendRedirect(substring1);
-                        }else {
-                            super.processTemplate(returnValue,req,resp);
+                //Method declaredMethod = aClass.getDeclaredMethod(operate, HttpServletRequest.class, HttpServletResponse.class);
+                Method[] declaredMethods = aClass.getDeclaredMethods();
+                for (Method method : declaredMethods) {
+                    if (method.getName().equals(operate)) {
+                        //获取方法参数
+                        Parameter[] parameters = method.getParameters();
+                        Object[] parameterObjects = new Object[parameters.length];
+                        for (int j = 0; j < parameters.length; j++) {
+                            Parameter parameter = parameters[j];
+                            if ("request".equals(parameter.getName())) {
+                                parameterObjects[j] = req;
+                            } else if ("response".equals(parameter.getName())) {
+                                parameterObjects[j] = resp;
+                            } else if ("session".equals(parameter.getName())) {
+                                parameterObjects[j] = req.getSession();
+                            } else {
+                                String reqParameter = req.getParameter(parameter.getName());
+                                Object parameterObject = reqParameter;
+                                if (reqParameter != null) {
+                                    if ("java.lang.Integer".equals(parameter.getType().getName())) {
+                                        parameterObject = Integer.parseInt(reqParameter);
+                                    }
+                                    parameterObjects[j] = parameterObject;
+                                }
+                            }
+                        }
+                        method.setAccessible(true);
+                        Object invoke = method.invoke(o, parameterObjects);
+                        if (invoke instanceof String) {
+                            String returnValue = (String) invoke;
+                            boolean redirect = returnValue.startsWith("redirect");
+                            if (redirect) {
+                                String substring1 = returnValue.substring("redirect:".length());
+                                resp.sendRedirect(substring1);
+                            } else {
+                                super.processTemplate(returnValue, req, resp);
+                            }
                         }
                     }
                 }
-
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
