@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class FruitController {
-    private FruitService fruitService = new FruitServiceImpl();
+    private FruitService fruitService;
 
     private String update(Integer fid, String fname, Integer price, Integer fcount, String remark) throws ServletException, IOException {
 

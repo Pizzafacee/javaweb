@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,8 +46,28 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
                 }
             }
             //组装bean之间的依赖关系
-
-
+            for (int i = 0; i < bean.getLength(); i++) {
+                Node node = bean.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element beanNode = (Element) node;
+                    String beanId = beanNode.getAttribute("id");
+                    NodeList childNodes = node.getChildNodes();
+                    for (int j = 0; j < childNodes.getLength(); j++) {
+                        Node childNode = childNodes.item(j);
+                        if (childNode.getNodeType() == Node.ELEMENT_NODE && childNode.getNodeName().equals("property")) {
+                            Element element = (Element) childNode;
+                            String name = element.getAttribute("name");
+                            String ref = element.getAttribute("ref");
+                            Object beanObject = beanMap.get(beanId);
+                            Object refObject = beanMap.get(ref);
+                            Class<?> beanObjectClass = beanObject.getClass();
+                            Field declaredField = beanObjectClass.getDeclaredField(name);
+                            declaredField.setAccessible(true);
+                            declaredField.set(beanObject, refObject);
+                        }
+                    }
+                }
+            }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -58,6 +79,8 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
 

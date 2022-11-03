@@ -8,31 +8,31 @@ import atguigu.fruit.service.FruitService;
 import java.util.List;
 
 public class FruitServiceImpl implements FruitService {
-    private FruitDAO fruitDAO = new FruitDAOImpl();
+    private FruitDAO fruitDao;
 
     @Override
     public List<Fruit> getFruitList(String keyword, Integer pageNo) {
-        return fruitDAO.getFruitList(keyword, pageNo);
+        return fruitDao.getFruitList(keyword, pageNo);
     }
 
     @Override
     public void addFruit(Fruit fruit) {
-        fruitDAO.addFruit(fruit);
+        fruitDao.addFruit(fruit);
     }
 
     @Override
     public Fruit getFruitByFid(Integer fid) {
-        return fruitDAO.getFruitByFid(fid);
+        return fruitDao.getFruitByFid(fid);
     }
 
     @Override
     public void delFruit(Integer fid) {
-        fruitDAO.delFruit(fid);
+        fruitDao.delFruit(fid);
     }
 
     @Override
     public Integer getPageCount(String keyword) {
-        return fruitDAO.getFruitCount(keyword);
+        return fruitDao.getFruitCount(keyword);
     }
 
     @Override
