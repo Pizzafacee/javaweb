@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<beans>
+    <bean id="userBasicDao" class="com.atguigu.qqZone.dao.impl.UserBasicDaoImpl"/>
+    <bean id="topicDao" class="com.atguigu.qqZone.dao.impl.TopicDaoImpl"/>
+    <bean id="userBasicService" class="com.atguigu.qqZone.service.impl.UserBasicServiceImpl">
+        <property name="userBasicDao" ref="userBasicDao"/>
+    </bean>
+
+    <bean id="topicService" class="com.atguigu.qqZone.service.impl.TopicServiceImpl">
+        <property name="topicDao" ref="topicDao"/>
+    </bean>
+    <bean id="user" class="com.atguigu.qqZone.controller.UserController">
+        <property name="userBasicService" ref="userBasicService"/>
+        <property name="topicService" ref="topicService"/>
+    </bean>
+    <bean id="page" class="com.atguigu.myssm.myspringmvc.PageController"/>
+</beans>

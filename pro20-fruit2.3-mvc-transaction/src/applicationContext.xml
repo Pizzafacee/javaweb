@@ -10,4 +10,5 @@
   <bean id="fruit" class="atguigu.fruit.controllers.FruitController">
     <property name="fruitService" ref="fruitService"/>
   </bean>
+
 </beans>

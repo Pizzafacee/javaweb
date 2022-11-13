@@ -1,17 +1,16 @@
-package atguigu.myssm.io.impl;
+package com.atguigu.myssm.ioc.impl;
 
-import atguigu.myssm.exception.DispatchServletException;
-import atguigu.myssm.io.BeanFactory;
+
+import com.atguigu.myssm.exception.DispatchServletException;
+import com.atguigu.myssm.ioc.BeanFactory;
+import com.atguigu.myssm.utils.StringUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -19,10 +18,16 @@ import java.util.Map;
 
 public class ClassPathXmlApplicationContext implements BeanFactory {
     private Map<String, Object> beanMap = new HashMap<>();
-
-    public ClassPathXmlApplicationContext() {
+    private String path = "applicationContext.xml" ;
+    public ClassPathXmlApplicationContext(){
+        this("applicationContext.xml");
+    }
+    public ClassPathXmlApplicationContext(String path) {
+        if(StringUtil.isEmpty(path)){
+            throw new RuntimeException("IOC容器的配置文件没有指定...");
+        }
         try {
-            InputStream applicationContext = this.getClass().getClassLoader().getResourceAsStream("applicationContext.xml");
+            InputStream applicationContext = this.getClass().getClassLoader().getResourceAsStream(path);
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             //最后得到applicationContext的文件对象

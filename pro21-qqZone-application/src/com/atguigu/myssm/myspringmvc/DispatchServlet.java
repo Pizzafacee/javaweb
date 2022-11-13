@@ -1,10 +1,9 @@
-package atguigu.myssm.myspringmvc;
+package com.atguigu.myssm.myspringmvc;
 
-import atguigu.myssm.ioc.BeanFactory;
-import atguigu.myssm.ioc.impl.ClassPathXmlApplicationContext;
-import atguigu.myssm.util.StringUtil;
 
-import javax.servlet.ServletConfig;
+import com.atguigu.myssm.ioc.BeanFactory;
+import com.atguigu.myssm.utils.StringUtil;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

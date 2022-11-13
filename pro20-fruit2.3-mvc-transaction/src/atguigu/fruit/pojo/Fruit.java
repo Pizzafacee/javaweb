@@ -1,6 +1,8 @@
 package atguigu.fruit.pojo;
 
-public class Fruit {
+import java.io.Serializable;
+
+public class Fruit implements Serializable {
     private Integer fid ;
     private String fname ;
     private Integer price ;
