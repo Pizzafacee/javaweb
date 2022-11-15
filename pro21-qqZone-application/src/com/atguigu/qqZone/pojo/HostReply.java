@@ -9,6 +9,10 @@ public class HostReply {
     private UserBasic author;
     private Reply reply;
 
+    public void setReply(Reply reply) {
+        this.reply = reply;
+    }
+
     public HostReply() {
     }
 
@@ -48,7 +52,4 @@ public class HostReply {
         return reply;
     }
 
-    public void setReply(Reply reply) {
-        this.reply = reply;
-    }
 }

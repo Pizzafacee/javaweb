@@ -58,4 +58,12 @@ public class Topic {
     public void setAuthor(UserBasic author) {
         this.author = author;
     }
+
+    public List<Reply> getReplyList() {
+        return replyList;
+    }
+
+    public void setReplyList(List<Reply> replyList) {
+        this.replyList = replyList;
+    }
 }

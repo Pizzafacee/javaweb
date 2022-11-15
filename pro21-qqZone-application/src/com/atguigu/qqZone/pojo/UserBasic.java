@@ -3,6 +3,7 @@ package com.atguigu.qqZone.pojo;
 import java.io.Serializable;
 import java.util.List;
 
+
 public class UserBasic implements Serializable {
     private Integer id;
     private String loginId;
@@ -24,16 +25,25 @@ public class UserBasic implements Serializable {
         return userDetail;
     }
 
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
+
+    public String getLoginId() {
+        return loginId;
+    }
+
     public void setUserDetail(UserDetail userDetail) {
         this.userDetail = userDetail;
     }
 
-    public List<Topic> getTopicList() {
-        return topicList;
-    }
-
     public void setTopicList(List<Topic> topicList) {
         this.topicList = topicList;
+    }
+
+    public List<Topic> getTopicList() {
+        return topicList;
     }
 
     public List<UserBasic> getFriendList() {
