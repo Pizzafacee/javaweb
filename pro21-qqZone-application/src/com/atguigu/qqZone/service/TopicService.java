@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TopicService {
     List<Topic> getTopicList(UserBasic userBasic);
+
+    Topic getTopicDetailById(Integer id);
 }

@@ -9,6 +9,12 @@ public class Reply {
     private Integer author;
     private Integer topic;
 
+    private HostReply hostReply;
+
+    public void setHostReply(HostReply hostReply) {
+        this.hostReply = hostReply;
+    }
+
     public Integer getId() {
         return id;
     }
