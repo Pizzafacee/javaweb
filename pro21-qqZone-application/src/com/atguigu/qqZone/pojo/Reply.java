@@ -6,10 +6,14 @@ public class Reply {
     private Integer id;
     private String content;
     private Date replyDate;
-    private Integer author;
-    private Integer topic;
+    private UserBasic author;
+    private Topic topic;
 
     private HostReply hostReply;
+
+    public Reply(Integer id) {
+        this.id = id;
+    }
 
     public void setHostReply(HostReply hostReply) {
         this.hostReply = hostReply;
@@ -39,19 +43,19 @@ public class Reply {
         this.replyDate = replyDate;
     }
 
-    public Integer getAuthor() {
+    public UserBasic getAuthor() {
         return author;
     }
 
-    public void setAuthor(Integer author) {
+    public void setAuthor(UserBasic author) {
         this.author = author;
     }
 
-    public Integer getTopic() {
+    public Topic getTopic() {
         return topic;
     }
 
-    public void setTopic(Integer topic) {
+    public void setTopic(Topic topic) {
         this.topic = topic;
     }
 

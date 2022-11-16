@@ -20,6 +20,10 @@ public class UserDetail {
         this.id = id;
     }
 
+    public UserDetail(Integer id) {
+        this.id = id;
+    }
+
     public String getRealName() {
         return realName;
     }
