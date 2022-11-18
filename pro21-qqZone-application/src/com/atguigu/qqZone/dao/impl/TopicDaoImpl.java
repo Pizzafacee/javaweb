@@ -27,6 +27,7 @@ public class TopicDaoImpl extends BaseDAO<Topic> implements TopicDao {
 
     @Override
     public Topic getTopicById(Integer id) {
-        return null;
+        String sql = "select * from t_topic where id=?";
+        return super.load(sql,id);
     }
 }
