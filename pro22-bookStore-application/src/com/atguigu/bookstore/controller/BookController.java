@@ -11,7 +11,7 @@ public class BookController {
 
     public String index(HttpSession session) {
         List<Book> books = bookService.queryAllBook();
-        session.setAttribute("books", books);
+        session.setAttribute("bookList", books);
         return "index";
     }
 }

@@ -11,7 +11,7 @@ public class UserController {
     public String login(String uname, String pwd, HttpSession session) {
         User user = userService.login(uname, pwd);
         if (user != null) {
-            session.setAttribute("user",user);
+            session.setAttribute("currUser",user);
             return "redirect:book.do";
         }
         return "user/login";
