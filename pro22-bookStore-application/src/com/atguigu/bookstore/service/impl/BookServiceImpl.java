@@ -15,4 +15,10 @@ public class BookServiceImpl extends BaseDAO<Book> implements BookService {
         List<Book> books = bookDao.selectAll();
         return books;
     }
+
+    @Override
+    public Book getBookByCartItemId(Integer id) {
+        Book book = bookDao.selectBookById(id);
+        return book;
+    }
 }

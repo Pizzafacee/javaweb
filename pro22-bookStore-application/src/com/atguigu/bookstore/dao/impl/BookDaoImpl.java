@@ -13,4 +13,11 @@ public class BookDaoImpl extends BaseDAO<Book> implements BookDao {
         List<Book> books = super.executeQuery(sql);
         return books;
     }
+
+    @Override
+    public Book selectBookById(Integer id) {
+        String sql = "select * from t_book where id = ?";
+        Book load = super.load(sql, id);
+        return load;
+    }
 }

@@ -13,4 +13,7 @@ public interface CartItemDao {
     void updateCartItem(CartItem cartItem);
 
     List<CartItem> selectCartItemList(User user);
+
+    //删除
+    void delCartItem(CartItem cartItem);
 }

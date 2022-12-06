@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface BookDao {
     List<Book> selectAll();
+
+    Book selectBookById(Integer id);
 }

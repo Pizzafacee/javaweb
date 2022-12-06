@@ -4,6 +4,7 @@ import com.atguigu.bookstore.pojo.Cart;
 import com.atguigu.bookstore.pojo.CartItem;
 import com.atguigu.bookstore.pojo.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface CartItemService {
@@ -17,5 +18,6 @@ public interface CartItemService {
 
     List<CartItem> getCartItemList(User user);
 
+    void delCartItems(ArrayList<CartItem> cartItems);
 }
 
