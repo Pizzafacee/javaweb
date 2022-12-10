@@ -34,4 +34,9 @@ public class CartController {
         cartItemService.addOrUpdateCartItem(cartItem, currUser.getCart());
         return "redirect:cart.do";
     }
+
+    public String editCart(Integer cartItemId,Integer buyCount){
+        cartItemService.updateCartItem(new CartItem(cartItemId,buyCount));
+        return "redirect:cart.do";
+    }
 }

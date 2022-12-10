@@ -1,6 +1,7 @@
 package com.atguigu.bookstore.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单
@@ -12,6 +13,26 @@ public class OrderBean {
     private User orderUser;
     private Double orderMoney;
     private Integer orderStatus;
+
+    private Integer totalBookCount ;
+
+    private List<OrderItem> orderItemList;
+
+    public Integer getTotalBookCount() {
+        return totalBookCount;
+    }
+
+    public void setTotalBookCount(Integer totalBookCount) {
+        this.totalBookCount = totalBookCount;
+    }
+
+    public List<OrderItem> getOrderItemList() {
+        return orderItemList;
+    }
+
+    public void setOrderItemList(List<OrderItem> orderItemList) {
+        this.orderItemList = orderItemList;
+    }
 
     public OrderBean() {
     }

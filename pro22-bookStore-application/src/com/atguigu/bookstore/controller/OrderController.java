@@ -63,4 +63,17 @@ public class OrderController {
         cartItemService.delCartItems(cartItems);
         return "index";
     }
+
+    /**
+     * 展示订单列表
+     * @param session
+     * @return
+     */
+    public String getOrderList(HttpSession session){
+        User currUser = (User) session.getAttribute("currUser");
+        List<OrderBean> orderBeanList  = orderService.getOrderList(currUser);
+        currUser.setOrderBeanList(orderBeanList);
+        session.setAttribute("currUser",currUser);
+        return "order/order";
+    }
 }

@@ -1,5 +1,9 @@
 package com.atguigu.bookstore.pojo;
 
+import com.mysql.cj.x.protobuf.MysqlxCrud;
+
+import java.util.List;
+
 public class User {
     private Integer id;
     private String uname;
@@ -9,6 +13,11 @@ public class User {
 
     private Cart cart;
 
+    public List<OrderBean> getOrderBeanList() {
+        return orderBeanList;
+    }
+
+    private List<OrderBean> orderBeanList;
     public void setCart(Cart cart) {
         this.cart = cart;
     }
@@ -62,5 +71,9 @@ public class User {
 
     public void setRole(Integer role) {
         this.role = role;
+    }
+
+    public void setOrderBeanList(List<OrderBean> orderBeanList) {
+        this.orderBeanList = orderBeanList;
     }
 }
