@@ -11,4 +11,10 @@ public class UserDaoImpl extends BaseDAO<User> implements UserDao {
         User user = super.load(sql, uname, pwd);
         return user;
     }
+
+    @Override
+    public void addUser(User user) {
+        String sql = "insert into t_user values(0,?,?,?,?)";
+        super.executeUpdate(sql,user.getUname(),user.getPwd(),user.getEmail(),user.getRole());
+    }
 }

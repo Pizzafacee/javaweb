@@ -10,6 +10,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(String uname, String pwd) {
         User user = userDao.selectUser(uname, pwd);
-        return null;
+        return user;
+    }
+
+    @Override
+    public void regist(User user) {
+        userDao.addUser(user);
     }
 }
